@@ -1,25 +1,9 @@
-#### 使用者能夠輸入特定的關鍵字，搜尋 GitHub 匹配到的 Repository Name 將傳回的結果以表格呈現，顯示以下欄位
+### 本次專案參考 https://github.com/Yuki0916/repository-search/tree/origin 進行修改
 
-- Repository Name
-- Owner Name
-- Created Date
-- Updated Date
-- Star Count
-- Watchers
+#### 完成項目
 
-#### 每個欄位實作排序功能，且能進行升序、降序排序
-
-#### 分頁功能，每頁最多十筆
-
-#### 點擊表格上的其中一行，會同時顯示以下額外資訊:
-
-- 列出該 Repository 的前十筆 Branch Name
-- 列出該 Repository 的前十筆 Commit Message
-- UI 在設計是跳出對話框。
-
-#### 參考資源:
-
-- https://developer.github.com/v3/search/#search-repositories
-- https://developer.github.com/v3/#pagination
-- https://developer.github.com/v3/repos/branches/
-- https://developer.github.com/v3/repos/commits/
+- 輸入地點的輸入框
+- 發送請求之後會顯示地區、氣溫及天氣狀況
+- 列表依照輸入地點先後順序由低至高排序，最後輸入者排最前面。
+- 若輸入地點找不到，會有彈出視窗提示
+- 搜尋結果會固定在藍色方塊中，當表單長度超過會有 scroll bar

@@ -1,74 +1,76 @@
-import { combineReducers } from "redux";
-import Moment from "moment";
+import { combineReducers } from 'redux'
 import {
   SEARCH_RESULT,
-  SEARCH_REPOSITORY,
   CLEAN_SEARCH_REPOSITORY,
   ERROR_HANDEL,
   LOADING_ON,
-  LOADING_OFF
-} from "./actions";
+  LOADING_OFF,
+} from './actions'
 
 function dataStore(
   state = {
-    SearchResultList: [],
-    PaginationCount: 0,
-    ResponsitoryDetail: {},
-    QueryString: "",
-    ErrorMessage: "",
+    QueryString: '',
+    ErrorMessage: '',
     Loading: false,
     Dialog: {
-      BranchList: [],
-      CommitList: [],
-      RepositoryName: ""
+      ErrorMessage: '',
     },
-    WeatherResultList: []
+    WeatherResultList: [],
   },
   action
 ) {
   switch (action.type) {
     case SEARCH_RESULT:
-      console.log(action.data);
-      console.log({
-        temp: Math.round(action.data.main.temp - 273.15),
-        weather: action.data.weather[0]
-      });
-      return state;
-
-    case SEARCH_REPOSITORY:
-      const {
-        data: { resBranch, resCommit, repositoryName }
-      } = action;
-
+      if (action.data.cod === '404') {
+        return {
+          ...state,
+          Dialog: {
+            Message: action.data.message,
+          },
+        }
+      }
       return {
         ...state,
-        Dialog: {
-          BranchList: resBranch.map(item => item.name).slice(0, 10),
-          CommitList: resCommit.map(item => item.commit.message).slice(0, 10),
-          RepositoryName: repositoryName
-        }
-      };
+        WeatherResultList: [
+          {
+            Name: action.data.name,
+            ID: action.data.id,
+            Temp: Math.round(action.data.main.temp - 273.15),
+            Weather: action.data.weather[0],
+            WeatherPicture: `http://openweathermap.org/img/w/${
+              action.data.weather[0].icon
+            }.png`,
+          },
+          ...state.WeatherResultList.filter(item => item.ID !== action.data.id),
+        ],
+      }
+
     case CLEAN_SEARCH_REPOSITORY:
       return {
         ...state,
         Dialog: {
           BranchList: [],
           CommitList: [],
-          RepositoryName: ""
-        }
-      };
+          RepositoryName: '',
+        },
+      }
     case ERROR_HANDEL:
-      console.error(`ERROR_HANDEL ${action.data}`);
-      return state;
+      console.error(`ERROR_HANDEL ${action.data}`)
+      return {
+        ...state,
+        Dialog: {
+          Message: action.data,
+        },
+      }
     default:
-      return state;
+      return state
   }
 }
 
 function pageControl(
   state = {
     Loading: false,
-    Dialog: false
+    Dialog: false,
   },
   action
 ) {
@@ -76,28 +78,31 @@ function pageControl(
     case LOADING_ON:
       return {
         ...state,
-        Loading: true
-      };
+        Loading: true,
+      }
     case LOADING_OFF:
       return {
         ...state,
-        Loading: false
-      };
-    case SEARCH_REPOSITORY:
-      return {
-        ...state,
-        Dialog: true
-      };
+        Loading: false,
+      }
     case CLEAN_SEARCH_REPOSITORY:
       return {
         ...state,
-        Dialog: false
-      };
+        Dialog: false,
+      }
+    case SEARCH_RESULT:
+      if (action.data.cod === '404') {
+        return {
+          ...state,
+          Dialog: true,
+        }
+      }
+      return state
     default:
-      return state;
+      return state
   }
 }
 
-const rootReducer = combineReducers({ dataStore, pageControl });
+const rootReducer = combineReducers({ dataStore, pageControl })
 
-export default rootReducer;
+export default rootReducer

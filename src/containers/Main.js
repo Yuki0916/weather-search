@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import SearchBar from './SearchBar'
-import Pagination from './Pagination'
 import ResultTable from './ResultTable'
 import LoadingPage from '../components/LoadingPage'
 import Dialog from './Dialog'
@@ -21,7 +20,6 @@ export class Main extends Component {
       <div style={styles.Main}>
         <SearchBar />
         <ResultTable />
-        <Pagination />
         {loadingStatus && <LoadingPage />}
         {dialogStatus && <Dialog />}
       </div>

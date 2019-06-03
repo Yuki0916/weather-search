@@ -1,9 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { sortBy } from 'lodash'
 import * as ActionCenter from '../actions'
 import ResultTableItem from '../components/ResultTable'
+
+const styles = {
+  ResultTableMain: {
+    height: '70vh',
+    overflow: 'auto',
+    background: 'lightblue',
+  },
+  ResultTableTitle: {
+    padding: 5,
+    textAlign: 'center',
+  },
+}
 
 class ResultTable extends Component {
   state = {
@@ -11,27 +22,6 @@ class ResultTable extends Component {
     name: '',
     reverse: false,
   }
-
-  sortTable = inputName => {
-    const { stateResultList, name, reverse } = this.state
-    if (inputName === name)
-      return this.setState({
-        stateResultList: stateResultList.reverse(),
-        name: inputName,
-        reverse: !reverse,
-      })
-    return this.setState({
-      stateResultList: sortBy(stateResultList, inputName),
-      name: inputName,
-      reverse: false,
-    })
-  }
-
-  getRepositoryInfo = (repositoryName, ownerName) => {
-    const { fetchRepositoryInformation } = this.props
-    fetchRepositoryInformation(repositoryName, ownerName)
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     const nowResultList = this.props.searchResultList
     const nextResultList = nextProps.searchResultList
@@ -44,19 +34,16 @@ class ResultTable extends Component {
   render() {
     const { stateResultList } = this.state
     return (
-      <div>
-        <ResultTableItem
-          searchResultList={stateResultList}
-          sortTable={this.sortTable}
-          getRepositoryInfo={this.getRepositoryInfo}
-        />
+      <div style={styles.ResultTableMain}>
+        <div style={styles.ResultTableTitle}>Search Result</div>
+        <ResultTableItem searchResultList={stateResultList} />
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  searchResultList: state.dataStore.SearchResultList,
+  searchResultList: state.dataStore.WeatherResultList,
 })
 
 const mapDispatchToProps = dispatch =>
